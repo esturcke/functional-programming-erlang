@@ -1,5 +1,5 @@
 -module(misc).
--export([xOrOne/2, xOrTwo/2, xOrThree/2, maxThree/3, howManyEqual/3, fib/1, pieces/1, fibFast/1, perfect/1, product/1, maximum/1]).
+-export([xOrOne/2, xOrTwo/2, xOrThree/2, maxThree/3, howManyEqual/3, fib/1, pieces/1, fibFast/1, perfect/1, product/1, maximum/1, double/1, evens/1]).
 
 xOrOne(X, Y) ->
     X =/= Y.
@@ -66,3 +66,20 @@ maximum([X]) -> X;
 maximum([X|Xs]) -> maximum(Xs, X).
 maximum([X], M) -> max(X, M);
 maximum([X|Xs], M) -> maximum(Xs, max(X, M)).
+
+reverse(Xs) -> reverse(Xs, []).
+reverse([], Ys) -> Ys;
+reverse([X|Xs], Ys) -> reverse(Xs, [X|Ys]).
+
+% Transforming list elements
+% Define an Erlang function double/1 to double the elements of a list of numbers.
+double(Xs) -> double(Xs, []).
+double([], Ys) -> reverse(Ys);
+double([X|Xs], Ys) -> double(Xs, [2 * X|Ys]).
+
+% Filtering lists
+% Define a function evens/1 that extracts the even numbers from a list of integers.
+evens(Xs) -> evens(Xs, []).
+evens([], Ys) -> reverse(Ys);
+evens([X|Xs], Ys) when X rem 2 == 0 -> evens(Xs, [X|Ys]);
+evens([_|Xs], Ys) -> evens(Xs, Ys).
