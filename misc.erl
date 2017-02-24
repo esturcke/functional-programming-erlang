@@ -1,5 +1,5 @@
 -module(misc).
--export([xOrOne/2, xOrTwo/2, xOrThree/2, maxThree/3, howManyEqual/3, fib/1, pieces/1, fibFast/1, perfect/1, product/1, maximum/1, double/1, evens/1]).
+-export([xOrOne/2, xOrTwo/2, xOrThree/2, maxThree/3, howManyEqual/3, fib/1, pieces/1, fibFast/1, perfect/1, product/1, maximum/1, double/1, evens/1, take/2, nub/1]).
 
 xOrOne(X, Y) ->
     X =/= Y.
@@ -83,3 +83,19 @@ evens(Xs) -> evens(Xs, []).
 evens([], Ys) -> reverse(Ys);
 evens([X|Xs], Ys) when X rem 2 == 0 -> evens(Xs, [X|Ys]);
 evens([_|Xs], Ys) -> evens(Xs, Ys).
+
+-spec take(integer(), [T]) -> [T].
+take(N, Xs) when N >= 0 -> take(N, Xs, []).
+take(0, _, Ys) -> reverse(Ys);
+take(_, [], Ys) -> reverse(Ys);
+take(N, [X|Xs], Ys) -> take(N - 1, Xs, [X|Ys]).
+
+-spec in(T, [T]) -> bool.
+in(_, []) -> false;
+in(X, [X|_]) -> true;
+in(X, [_|Ys]) -> in(X, Ys).
+
+-spec nub([T]) -> [T].
+nub(X) -> nub(X, []).
+nub([], Ys) -> reverse(Ys);
+nub([X|Xs], Ys) -> nub(Xs, case in(X, Ys) of true -> Ys; false -> [X|Ys] end).
