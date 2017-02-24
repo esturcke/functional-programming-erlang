@@ -1,6 +1,7 @@
 -module(bits).
 -export([bits/1, bits2/1]).
 
+% non-tail recursive bit counter
 bits(0) ->
     0;
 
@@ -10,6 +11,7 @@ bits(X) when X > 0, X rem 2 == 1 ->
 bits(X) when X > 0 ->
     bits(X div 2).
 
+% tail recursive bit counter
 bits2(X) when X >= 0 ->
     bits2(X, 0).
 
