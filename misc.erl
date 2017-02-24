@@ -1,5 +1,5 @@
 -module(misc).
--export([xOrOne/2, xOrTwo/2, xOrThree/2, maxThree/3, howManyEqual/3, fib/1, pieces/1, fibFast/1, perfect/1]).
+-export([xOrOne/2, xOrTwo/2, xOrThree/2, maxThree/3, howManyEqual/3, fib/1, pieces/1, fibFast/1, perfect/1, product/1, maximum/1]).
 
 xOrOne(X, Y) ->
     X =/= Y.
@@ -58,4 +58,11 @@ perfect(N, I, A) when N rem I == 0 ->
 perfect(N, I, A) ->
     perfect(N, I - 1, A).
 
+product(Xs) -> product(Xs, 1).
+product([], A) -> A;
+product([X|Xs], A) -> product(Xs, A * X).
 
+maximum([X]) -> X;
+maximum([X|Xs]) -> maximum(Xs, X).
+maximum([X], M) -> max(X, M);
+maximum([X|Xs], M) -> maximum(Xs, max(X, M)).
