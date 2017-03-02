@@ -7,7 +7,22 @@
 %   { "foo" , [{3,5},{7,7},{11,13}] }
 %
 -spec create(string()) -> [{string(), [{integer(), integer()}]}].
-create(Name) -> [].
+create(Name) ->
+  Lines = number(get_file_contents(Name)),
+  Words =split(Lines), 
+  Words.
+
+% Zip a list with the index in the for each item in the list
+-spec number([string()]) -> [{string(), integer()}].
+number(Lines) -> lists:zip(Lines, lists:seq(1, length(Lines))).
+
+% Split each numbered line into words
+-spec split([{string(), integer()}]) -> [{string(), integer()}].
+split(Lines) -> lists:flatmap(fun({Line, Index}) -> lists:map(fun(Word) -> {Word, Index} end, words(Line)) end, Lines).
+
+% Split a line into words
+-spec words(string()) -> [string()].
+words(Line) -> string:tokens(string:to_lower(Line), " ").
 
 % Used to read a file into a list of lines.
 % Example files available in:
