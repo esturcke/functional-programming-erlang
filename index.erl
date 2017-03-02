@@ -1,5 +1,13 @@
 -module(index).
--export([get_file_contents/1,show_file_contents/1]).
+-export([create/1]).
+
+% Given a file name, returns the sorted index with
+% entries that look like
+%
+%   { "foo" , [{3,5},{7,7},{11,13}] }
+%
+-spec create(string()) -> [{string(), [{integer(), integer()}]}].
+create(Name) -> [].
 
 % Used to read a file into a list of lines.
 % Example files available in:
