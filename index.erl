@@ -65,12 +65,3 @@ get_all_lines(File,Partial) ->
       {Strip,_} = lists:split(length(Line)-1,Line),
       get_all_lines(File,[Strip|Partial])
     end.
-
-% Show the contents of a list of strings.
-% Can be used to check the results of calling get_file_contents.
-
-show_file_contents([L|Ls]) ->
-  io:format("~s~n",[L]),
-  show_file_contents(Ls);
-show_file_contents([]) ->
-  ok.
