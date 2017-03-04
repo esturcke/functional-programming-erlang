@@ -9,7 +9,7 @@
 -spec create(string()) -> [{string(), [{integer(), integer()}]}].
 create(Name) ->
   Lines = number(get_file_contents(Name)),
-  Words =split(Lines), 
+  Words = split(Lines), 
   Words.
 
 % Zip a list with the index in the for each item in the list
@@ -22,7 +22,23 @@ split(Lines) -> lists:flatmap(fun({Line, Index}) -> lists:map(fun(Word) -> {Word
 
 % Split a line into words
 -spec words(string()) -> [string()].
-words(Line) -> string:tokens(string:to_lower(Line), " ").
+words(Line) -> normalize(string:tokens((Line), " ")).
+
+% Remove non-words and normalize spelling
+-spec normalize([string()]) -> [string()].
+normalize(Words) -> lists:filtermap(fun(Word) ->
+                                      case valid(Word) of
+                                        true -> { true, string:to_lower(Word) };
+                                        false -> false
+                                      end
+                                    end, Words).
+
+% Check if a word should be included
+-spec valid(string()) -> boolean().
+valid(Word) -> lists:all(fun(Letter) when $a =< Letter, Letter =< $z -> true;
+                            (Letter) when $A =< Letter, Letter =< $Z -> true;
+                            ($') -> true;
+                            (_) -> false end, Word).
 
 % Used to read a file into a list of lines.
 % Example files available in:
