@@ -47,7 +47,7 @@ sort(Words) -> lists:sort(fun({WordA, _}, {WordB, _}) -> WordA =< WordB end, Wor
 
 % Group identical words and form index ranges
 -spec group([{string(), integer()}]) -> [{string(), [{integer(), integer()}]}].
-group(Words) -> lists:foldr(fun(Element, Acc) -> coalesce(Element, Acc) end, [], Words).
+group(Words) -> lists:foldr(fun coalesce/2, [], Words).
 
 % Helper for group/1 to add one word/index to the accumulator
 -spec coalesce({string(), integer()}, [{string(), [{integer(), integer()}]}]) -> [{string(), [{integer(), integer()}]}].
