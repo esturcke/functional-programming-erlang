@@ -21,8 +21,8 @@ where `A`, `B` and `C` are lengths of the sides.
 > See whether you can make both a direct recursive and a tail recursive definition.
 > Which do you think is better? Why?
 
-`bits:bits/1` is the regular recursive version. It adds 1 if the number is odd to a recusive call counting the number of bits of the number divided by 2.
+`bits:bits/1` is the regular recursive version. It adds 1 if the number is odd to a recursive call counting the number of bits of the number divided by 2.
 
-`bits:bits2/1` uses the same algorithm but with an accumilator and tail recusive call.
+`bits:bits2/1` uses the same algorithm but with an accumulator and tail recursive call.
 
 On large numbers `bits:bits2/1` is faster. I suspect this is because it reuses the stack for the recursive call.
