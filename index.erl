@@ -22,7 +22,7 @@ split(Lines) -> lists:flatmap(fun({Line, Index}) -> lists:map(fun(Word) -> {Word
 
 % Split a line into words
 -spec words(string()) -> [string()].
-words(Line) -> normalize(string:tokens((Line), " ")).
+words(Line) -> normalize(string:tokens((Line), " .!?,`")).
 
 % Remove non-words and normalize spelling
 -spec normalize([string()]) -> [string()].
@@ -38,6 +38,7 @@ normalize(Words) -> lists:filtermap(fun(Word) ->
 valid(Word) -> lists:all(fun(Letter) when $a =< Letter, Letter =< $z -> true;
                             (Letter) when $A =< Letter, Letter =< $Z -> true;
                             ($') -> true;
+                            ($-) -> true;
                             (_) -> false end, Word) andalso length(Word) >= 3.
 
 % Sort word/line number pairs by word
