@@ -40,13 +40,21 @@ valid(Word) -> lists:all(fun(Letter) when $a =< Letter, Letter =< $z -> true;
                             ($') -> true;
                             (_) -> false end, Word).
 
-% Sort word/line numebr pairs by word
+% Sort word/line number pairs by word
 -spec sort([{string(), integer()}]) -> [{string(), integer()}].
 sort(Words) -> lists:sort(fun({WordA, _}, {WordB, _}) -> WordA =< WordB end, Words).
 
-% Group identical words and form 
+% Group identical words and form index ranges
 -spec group([{string(), integer()}]) -> [{string(), [{integer(), integer()}]}].
-group(A) -> A.
+group(Words) -> lists:foldr(fun(Element, Acc) -> coalesce(Element, Acc) end, [], Words).
+
+% Helper for group/1 to add one word/index to the accumulator
+-spec coalesce({string(), integer()}, [{string(), [{integer(), integer()}]}]) -> [{string(), [{integer(), integer()}]}].
+coalesce({Word, Index}, []) -> [{Word, [{Index, Index}]}];
+coalesce({Word, Index}, Acc = [{Word, [{Index, _}|_]}|_]) -> Acc;
+coalesce({Word, Index}, [{Word, [{Low, High}|Indexes]}|Words]) when Index =:= Low - 1 -> [{Word, [{Index, High}|Indexes]}|Words];
+coalesce({Word, Index}, [{Word, Indexes}|Words]) -> [{Word, [{Index, Index}|Indexes]}|Words];
+coalesce({Word, Index}, Words) -> [{Word, [{Index, Index}]}|Words].
 
 % Used to read a file into a list of lines.
 % Example files available in:
