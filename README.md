@@ -61,4 +61,4 @@ I didn't do this part, but that would also be part of the `normalize/1` function
 
 > (Harder) Thinking how you could make the data representation more efficient than the one you first chose. This might be efficient for lookup only, or for both creation and lookup.
 
-The current implementation is *O*(*n* ln *n*) for creation and *O*(*n*) for lookups. I suppose using a binary search tree could reduce the lookup time to *O*(ln *n*)* or hash map to reduce the creation time to *O*(*n*) and lookups to *O*(*n*). Both operations seemed fast enough on my machine withe the Dickens text and so I didn't put the time in to try either.
+The current implementation is *O*(*n* ln *n*) for creation and *O*(*n*) for lookups. I suppose using a binary search tree could reduce the lookup time to *O*(ln *n*)* or hash map to reduce the creation time to *O*(*n*) and lookups to *O*(*n*) with the draw back that we lose sort order. Both operations seemed fast enough on my machine with the Dickens text and so I didn't put the time in to trying either.
