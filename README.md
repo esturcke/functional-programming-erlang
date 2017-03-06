@@ -39,4 +39,26 @@ On large numbers `bits:bits2/1` is faster. I suspect this is because it reuses t
 >
 > means that the word "foo" occurs on lines 3, 4, 5, 7, 11, 12 and 13 in the file.
 
-My solution is found in `index.erl`. First, we number lines and then split each line into words which are then normalized, filtered, sorted and grouped.
+My solution is found in `index.erl`. We index the lines and then split each line into words which are then normalized, filtered, sorted and grouped.
+
+### Taking it further
+
+> Removing all short words (e.g. words of length less than 3) or all common words (you‘ll have to think about how to define these).
+
+Valid words are checked with `valid/1`, which ensures that words are letters and apostrophe only and that they are at least 3 characters long I didn't add the logic to remove common words, but this is where I would put that check as well.
+
+> Sorting the output so that the words occur in lexicographic order.
+
+The algorithm used requires that the words are sorted and so this is already taken care of.
+
+> Normalising the words so that capitalised ("Foo") and non capitalised versions ("foo") of a word are identified.
+
+I wrote a `normalize/1` function to take care of this by converting words to all lower case.
+
+> Normalising so that common endings, plurals etc. identified.
+
+I didn't do this part, but that would also be part of the `normalize/1` function.
+
+> (Harder) Thinking how you could make the data representation more efficient than the one you first chose. This might be efficient for lookup only, or for both creation and lookup.
+
+The current implementation is *O*(*n* ln *n*) for creation and *O*(*n*) for lookups. I suppose using a binary search tree could reduce the lookup time to *O*(ln *n*)* or hash map to reduce the creation time to *O*(*n*) and lookups to *O*(*n*). Both operations seemed fast enough on my machine withe the Dickens text and so I didn't put the time in to try either.
