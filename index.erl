@@ -38,7 +38,7 @@ normalize(Words) -> lists:filtermap(fun(Word) ->
 valid(Word) -> lists:all(fun(Letter) when $a =< Letter, Letter =< $z -> true;
                             (Letter) when $A =< Letter, Letter =< $Z -> true;
                             ($') -> true;
-                            (_) -> false end, Word).
+                            (_) -> false end, Word) andalso length(Word) > 3.
 
 % Sort word/line number pairs by word
 -spec sort([{string(), integer()}]) -> [{string(), integer()}].

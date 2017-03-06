@@ -26,3 +26,17 @@ where `A`, `B` and `C` are lengths of the sides.
 `bits:bits2/1` uses the same algorithm but with an accumulator and tail recursive call.
 
 On large numbers `bits:bits2/1` is faster. I suspect this is because it reuses the stack for the recursive call.
+
+## Week 2 - Indexing a file
+
+> The aim of this exercise is to index a text file, by line number. We can think of the input being a list of text strings, and below we’ve provided an outline Erlang module that reads text files into this format, as well as a couple of example files to process.
+>
+> The output of the main function should be a list of entries consisting of a word and a list of the ranges of lines on which it occurs.
+> 
+> For example, the entry
+>
+> `{ "foo" , [{3,5},{7,7},{11,13}] }`
+>
+> means that the word "foo" occurs on lines 3, 4, 5, 7, 11, 12 and 13 in the file.
+
+My solution is found in `index.erl`. First, we number lines and then split each line into words which are then normalized, filtered, sorted and grouped.
