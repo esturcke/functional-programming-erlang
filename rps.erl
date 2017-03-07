@@ -11,11 +11,6 @@ beat(rock) -> paper;
 beat(paper) -> scissors;
 beat(scissors) -> rock.
 
--spec lose(move()) -> move().
-lose(rock) -> scissors;
-lose(paper) -> rock;
-lose(scissors) -> paper.
-
 -spec left_result(round()) -> result().
 left_result({A, A}) -> tie;
 left_result({A, B}) -> case A =:= beat(B) of
