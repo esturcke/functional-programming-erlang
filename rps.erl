@@ -109,8 +109,8 @@ no_repeat([paper|_]) -> rock.
 const(Play) ->
     dummy.
 
-cycle(Xs) ->
-    dummy.
+-spec cycle(moves()) -> move().
+cycle(Xs) -> lists:nth(1 + length(Xs) rem 3, [rock, paper, scissors]).
 
 -spec rand(moves()) -> move().
 rand(_) -> pick().
