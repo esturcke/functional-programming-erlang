@@ -22,8 +22,10 @@ end.
 
 % For a sequence of moves, what is the net win count for the left player
 -spec tournament([move()], [move()]) -> integer().
-tournament(LeftMoves, RightMoves) -> lists:foldr(fun(Round, Sum) -> case left_result(Round) of
-  win -> Sum + 1;
-  lose -> Sum - 1;
-  tie -> Sum
-end end, 0, lists:zip(LeftMoves, RightMoves)).
+tournament(LeftMoves, RightMoves) ->
+  Rounds = lists:zip(LeftMoves, RightMoves),
+  lists:foldr(fun(Round, Sum) -> case left_result(Round) of
+    win -> Sum + 1;
+    lose -> Sum - 1;
+    tie -> Sum
+  end end, 0, Rounds).
