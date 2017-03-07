@@ -1,5 +1,5 @@
 -module(rps).
--export([play/1, play_two/3, echo/1, rock/1, no_repeat/1, const/1, cycle/1, rand/1, tournament/2]).
+-export([play/1, play_two/3, echo/1, rock/1, no_repeat/1, cycle/1, rand/1, tournament/2]).
 
 % Rock-paper-scissors
 -type move() :: rock | paper | scissors.
@@ -92,13 +92,12 @@ pick() -> lists:nth(rand:uniform(3), [rock, paper, scissors]).
 %
 % strategies.
 %
-echo([]) ->
-     paper;
-echo([Last|_]) ->
-    Last.
+-spec echo(moves()) -> move().
+echo([]) -> paper;
+echo([Last|_]) -> Last.
 
-rock(_) ->
-    rock.
+-spec rock(moves()) -> move().
+rock(_) -> rock.
 
 -spec no_repeat(moves()) -> move().
 no_repeat([]) -> pick();
