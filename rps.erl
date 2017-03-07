@@ -6,14 +6,14 @@
 -type result() :: win | lose | draw.
 -type round() :: {move(), move()}.
 
--spec beat(move()) -> move().
-beat(rock) -> paper;
-beat(paper) -> scissors;
-beat(scissors) -> rock.
+-spec beats(move()) -> move().
+beats(rock) -> paper;
+beats(paper) -> scissors;
+beats(scissors) -> rock.
 
 -spec left_result(round()) -> result().
 left_result({A, A}) -> tie;
-left_result({A, B}) -> case A =:= beat(B) of
+left_result({A, B}) -> case A =:= beats(B) of
    true -> win;
    false -> lose
 end.
