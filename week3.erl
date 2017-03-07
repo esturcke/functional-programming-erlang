@@ -1,5 +1,5 @@
 -module(week3).
--export([doubleAll/1, evens/1, product/1, zip/2, zip_with/3, zip_with_alt/3, zip_alt/2, compose/1]).
+-export([doubleAll/1, evens/1, product/1, zip/2, zip_with/3, zip_with_alt/3, zip_alt/2, compose/1, twice/1]).
 
 -spec doubleAll([number()]) -> [number()].
 doubleAll(Xs) -> lists:map(fun(X) -> X * 2 end, Xs).
@@ -28,3 +28,6 @@ zip_alt(Xs, Ys) -> zip_with(fun(X, Y) -> {X, Y} end, Xs, Ys).
 
 -spec compose([fun()]) -> fun().
 compose(Fs) -> fun(X) -> lists:foldr(fun(F, Acc) -> F(Acc) end, X, Fs) end.
+
+-spec twice (fun()) -> fun().
+twice(F) -> compose([F, F]).
