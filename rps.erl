@@ -112,5 +112,5 @@ const(Play) ->
 cycle(Xs) ->
     dummy.
 
-rand(_) ->
-    dummy.
+-spec rand(moves()) -> move().
+rand(_) -> pick().
