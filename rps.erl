@@ -106,9 +106,6 @@ no_repeat([rock|_]) -> scissors;
 no_repeat([scissors|_]) -> paper;
 no_repeat([paper|_]) -> rock.
 
-const(Play) ->
-    dummy.
-
 -spec cycle(moves()) -> move().
 cycle(Xs) -> lists:nth(1 + length(Xs) rem 3, [rock, paper, scissors]).
 
