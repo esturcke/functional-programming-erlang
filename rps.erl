@@ -6,11 +6,13 @@
 -type result() :: win | lose | draw.
 -type round() :: {move(), move()}.
 
+% Return the move that beats the argument
 -spec beats(move()) -> move().
 beats(rock) -> paper;
 beats(paper) -> scissors;
 beats(scissors) -> rock.
 
+% Given a round, what is the outcome for the left player
 -spec left_result(round()) -> result().
 left_result({A, A}) -> tie;
 left_result({A, B}) -> case A =:= beats(B) of
@@ -18,6 +20,7 @@ left_result({A, B}) -> case A =:= beats(B) of
    false -> lose
 end.
 
+% For a sequence of moves, what is the net win count for the left player
 -spec tournament([move()], [move()]) -> integer().
 tournament(LeftMoves, RightMoves) -> lists:foldr(fun(Round, Sum) -> case left_result(Round) of
   win -> Sum + 1;
