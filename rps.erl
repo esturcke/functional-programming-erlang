@@ -1,5 +1,5 @@
 -module(rps).
--export([tournament/2]).
+-export([play/1, play_two/3, echo/1, rock/1, no_repeat/1, const/1, cycle/1, rand/1, tournament/2]).
 
 % Rock-paper-scissors
 -type move() :: rock | paper | scissors.
@@ -29,3 +29,85 @@ tournament(LeftMoves, RightMoves) ->
     lose -> Sum - 1;
     tie -> Sum
   end end, 0, Rounds).
+
+%
+% play one strategy against another, for N moves.
+%
+
+play_two(StrategyL, StrategyR, N) ->
+    play_two(StrategyL, StrategyR, [] ,[] ,N).
+
+% tail recursive loop for play_two/3
+% 0 case computes the result of the tournament
+
+% FOR YOU TO DEFINE
+% REPLACE THE dummy DEFINITIONS
+
+play_two(_,_,PlaysL,PlaysR,0) ->
+   dummy;
+
+play_two(StrategyL,StrategyR,PlaysL,PlaysR,N) ->
+   dummy.
+
+%
+% interactively play against a strategy, provided as argument.
+%
+
+play(Strategy) ->
+    io:format("Rock - paper - scissors~n"),
+    io:format("Play one of rock, paper, scissors, ...~n"),
+    io:format("... r, p, s, stop, followed by '.'~n"),
+    play(Strategy,[]).
+
+% tail recursive loop for play/1
+
+play(Strategy,Moves) ->
+    {ok,P} = io:read("Play: "),
+    Play = expand(P),
+    case Play of
+	stop ->
+	    io:format("Stopped~n");
+	_    ->
+	    Result = left_result({Play, Strategy(Moves)}),
+	    io:format("Result: ~p~n",[Result]),
+	    play(Strategy,[Play|Moves])
+    end.
+
+%
+% auxiliary functions
+%
+
+% transform shorthand atoms to expanded form
+    
+expand(r) -> rock;
+expand(p) -> paper;		    
+expand(s) -> scissors;
+expand(X) -> X.
+
+%
+% strategies.
+%
+echo([]) ->
+     paper;
+echo([Last|_]) ->
+    Last.
+
+rock(_) ->
+    rock.
+
+% FOR YOU TO DEFINE
+% REPLACE THE dummy DEFINITIONS
+
+no_repeat([]) ->
+    dummy;
+no_repeat([X|_]) ->
+    dummy.
+
+const(Play) ->
+    dummy.
+
+cycle(Xs) ->
+    dummy.
+
+rand(_) ->
+    dummy.
