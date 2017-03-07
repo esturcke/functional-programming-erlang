@@ -1,5 +1,5 @@
 -module(week3).
--export([doubleAll/1, evens/1, product/1, zip/2]).
+-export([doubleAll/1, evens/1, product/1, zip/2, zip_with/3]).
 
 -spec doubleAll([number()]) -> [number()].
 doubleAll(Xs) -> lists:map(fun(X) -> X * 2 end, Xs).
@@ -14,3 +14,8 @@ product(Xs) -> lists:foldr(fun(A, B) -> A * B end, 1, Xs).
 zip([], _) -> [];
 zip(_, []) -> [];
 zip([X|Xs], [Y|Ys]) -> [{X, Y}|zip(Xs, Ys)].
+
+-spec zip_with(fun((X, Y) -> T), [X], [Y]) -> [T].
+zip_with(_, [], _) -> [];
+zip_with(_, _, []) -> [];
+zip_with(F, [X|Xs], [Y|Ys]) -> [F(X, Y)|zip_with(F, Xs, Ys)].
