@@ -5,6 +5,7 @@
 -type move() :: rock | paper | scissors.
 -type result() :: win | lose | draw.
 -type round() :: {move(), move()}.
+-type moves() :: [move()].
 
 % Return the move that beats the argument
 -spec beats(move()) -> move().
@@ -84,6 +85,10 @@ expand(p) -> paper;
 expand(s) -> scissors;
 expand(X) -> X.
 
+% pick a random move
+-spec pick() -> move().
+pick() -> lists:nth(rand:uniform(3), [rock, paper, scissors]).
+
 %
 % strategies.
 %
@@ -95,13 +100,11 @@ echo([Last|_]) ->
 rock(_) ->
     rock.
 
-% FOR YOU TO DEFINE
-% REPLACE THE dummy DEFINITIONS
-
-no_repeat([]) ->
-    dummy;
-no_repeat([X|_]) ->
-    dummy.
+-spec no_repeat(moves()) -> move().
+no_repeat([]) -> pick();
+no_repeat([rock|_]) -> scissors;
+no_repeat([scissors|_]) -> paper;
+no_repeat([paper|_]) -> rock.
 
 const(Play) ->
     dummy.
