@@ -37,20 +37,30 @@ tournament(LeftMoves, RightMoves) ->
 % play one strategy against another, for N moves.
 %
 
+-spec play_two(strategy(), strategy(), integer()) -> ok.
 play_two(StrategyL, StrategyR, N) ->
-    play_two(StrategyL, StrategyR, [] ,[] ,N).
+    play_two(StrategyL, StrategyR, [], [], N).
 
 % tail recursive loop for play_two/3
 % 0 case computes the result of the tournament
 
-% FOR YOU TO DEFINE
-% REPLACE THE dummy DEFINITIONS
+-spec play_two_summary(integer()) -> ok.
+play_two_summary(0) -> io:format("It was a tie~n");
+play_two_summary(N) when N > 0 -> io:format("Left wins by ~p~n", [N]);
+play_two_summary(N) -> io:format("Right wins by ~p~n", [-N]).
 
-play_two(_,_,PlaysL,PlaysR,0) ->
-   dummy;
-
-play_two(StrategyL,StrategyR,PlaysL,PlaysR,N) ->
-   dummy.
+-spec play_two(strategy(), strategy(), moves(), moves(), integer()) -> ok.
+play_two(_, _, PlaysL, PlaysR, 0) -> play_two_summary(tournament(PlaysL, PlaysR));
+play_two(StrategyL, StrategyR, MovesL, MovesR, N) ->
+  MoveL = StrategyL(MovesR),
+  MoveR = StrategyR(MovesL),
+  io:format("~p - ~p: ", [MoveL, MoveR]),
+  case left_result({MoveL, MoveR}) of
+    win -> io:format("left wins~n");
+    lose -> io:format("right wins~n");
+    tie -> io:format("tie~n")
+  end,
+  play_two(StrategyL, StrategyR, [MoveL|MovesL], [MoveR|MovesR], N - 1).
 
 %
 % interactively play against a strategy, provided as argument.
