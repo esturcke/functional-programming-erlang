@@ -1,11 +1,13 @@
 -module(rps).
--export([play/1, play_two/3, echo/1, rock/1, no_repeat/1, cycle/1, rand/1, least_frequent/1, most_frequent/1, combine/1, tournament/2]).
+-export([play/1, play_two/3, echo/1, rock/1, no_repeat/1, cycle/1, rand/1, least_frequent/1, most_frequent/1, combine/1, best/1, best/0, tournament/2]).
 
 % Rock-paper-scissors
 -type move() :: rock | paper | scissors.
 -type result() :: win | lose | draw.
 -type round() :: {move(), move()}.
 -type moves() :: [move()].
+-type strategy() :: fun((moves()) -> move()).
+-type strategies() :: [strategy()].
 
 % Return the move that beats the argument
 -spec beats(move()) -> move().
@@ -22,7 +24,7 @@ left_result({A, B}) -> case A =:= beats(B) of
 end.
 
 % For a sequence of moves, what is the net win count for the left player
--spec tournament([move()], [move()]) -> integer().
+-spec tournament(moves(), moves()) -> integer().
 tournament(LeftMoves, RightMoves) ->
   Rounds = lists:zip(LeftMoves, RightMoves),
   lists:foldr(fun(Round, Sum) -> case left_result(Round) of
@@ -89,8 +91,8 @@ expand(X) -> X.
 -spec pick() -> move().
 pick() -> pick([rock, paper, scissors]).
 
-% pick from a list of moves
--spec pick(moves()) -> move().
+% pick from a list
+-spec pick([T]) -> T.
 pick(Moves) -> lists:nth(rand:uniform(length(Moves)), Moves).
 
 % count history rock/paper/scissors plays in a {rock, paper, scissors} count tuple
@@ -99,9 +101,7 @@ counts(Moves) ->
   F = fun(rock, {R, P, S}) -> {R + 1, P, S};
          (paper, {R, P, S}) -> {R, P + 1, S};
          (scissors, {R, P, S}) -> {R, P, S + 1} end,
-  Counts = lists:foldr(F, {0, 0, 0}, Moves),
-  io:format("~w~n", [Counts]),
-  Counts.
+  lists:foldr(F, {0, 0, 0}, Moves).
 
 % given the count tuple, get a list of most frequent moves
 -spec frequent({integer(), integer(), integer()}) -> [move()].
@@ -122,6 +122,27 @@ infrequent({Y, X, X}) when X < Y -> [paper, scissors];
 infrequent({X, Y, Z}) when X < Y, X < Z -> [rock];
 infrequent({X, Y, Z}) when Y < X, Y < Z -> [paper];
 infrequent({X, Y, Z}) when Z < X, Z < Y -> [scissors].
+
+% if we reverse the list then head is a move and tail the history
+-spec score_backwards(strategy(), moves()) -> integer().
+score_backwards(_, []) -> 0;
+score_backwards(Strategy, [Move|History]) -> score_backwards(Strategy, History) + case left_result({Strategy(History), Move}) of
+  win  ->  1;
+  lose -> -1;
+  tie  ->  0
+ end.
+
+-spec score(strategy(), moves()) -> integer().
+score(Strategy, Moves) -> score_backwards(Strategy, lists:reverse(Moves)).
+
+-spec max_by(fun((T) -> any()), [T]) -> T.
+max_by(F, Xs) -> hd(lists:sort(fun(X, Y) -> F(X) >= F(Y) end, Xs)).
+
+-spec best_for(strategies(), moves()) -> strategy().
+best_for(Strategies, Moves) ->
+  Scores = lists:map(fun(S) -> {S, score(S, Moves)} end, Strategies),
+  {Strategy, _} = max_by(fun({_, Score}) -> Score end, Scores),
+  Strategy.
 
 %
 % strategies.
@@ -151,8 +172,25 @@ least_frequent(Moves) -> beats(pick(infrequent(counts(Moves)))).
 -spec most_frequent(moves()) -> move().
 most_frequent(Moves) -> beats(pick(frequent(counts(Moves)))).
 
--spec combine([fun((moves()) -> move())]) -> fun((moves()) -> move()).
+-spec combine(strategies()) -> strategy().
 combine(Strategies) -> fun(Moves) ->
   Strategy = pick(Strategies),
   Strategy(Moves)
 end.
+
+-spec best(strategies()) -> strategy().
+best(Strategies) -> fun(Moves) ->
+  Strategy = best_for(Strategies, Moves),
+  Strategy(Moves)
+end.
+
+-spec best() -> strategy().
+best() -> best([
+  fun echo/1,
+  fun rock/1,
+  fun no_repeat/1,
+  fun cycle/1,
+  fun rand/1,
+  fun least_frequent/1,
+  fun most_frequent/1
+]).
