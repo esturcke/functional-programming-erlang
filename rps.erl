@@ -1,5 +1,5 @@
 -module(rps).
--export([play/1, play_two/3, echo/1, rock/1, no_repeat/1, cycle/1, rand/1, least_frequent/1, most_frequent/1, tournament/2]).
+-export([play/1, play_two/3, echo/1, rock/1, no_repeat/1, cycle/1, rand/1, least_frequent/1, most_frequent/1, combine/1, tournament/2]).
 
 % Rock-paper-scissors
 -type move() :: rock | paper | scissors.
@@ -150,3 +150,9 @@ least_frequent(Moves) -> beats(pick(infrequent(counts(Moves)))).
 
 -spec most_frequent(moves()) -> move().
 most_frequent(Moves) -> beats(pick(frequent(counts(Moves)))).
+
+-spec combine([fun((moves()) -> move())]) -> fun((moves()) -> move()).
+combine(Strategies) -> fun(Moves) ->
+  Strategy = pick(Strategies),
+  Strategy(Moves)
+end.
