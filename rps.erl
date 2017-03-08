@@ -1,5 +1,5 @@
 -module(rps).
--export([play/1, play_two/3, echo/1, rock/1, no_repeat/1, cycle/1, rand/1, tournament/2]).
+-export([play/1, play_two/3, echo/1, rock/1, no_repeat/1, cycle/1, rand/1, least_frequent/1, most_frequent/1, tournament/2]).
 
 % Rock-paper-scissors
 -type move() :: rock | paper | scissors.
@@ -87,7 +87,41 @@ expand(X) -> X.
 
 % pick a random move
 -spec pick() -> move().
-pick() -> lists:nth(rand:uniform(3), [rock, paper, scissors]).
+pick() -> pick([rock, paper, scissors]).
+
+% pick from a list of moves
+-spec pick(moves()) -> move().
+pick(Moves) -> lists:nth(rand:uniform(length(Moves)), Moves).
+
+% count history rock/paper/scissors plays in a {rock, paper, scissors} count tuple
+-spec counts(moves()) -> {integer(), integer(), integer()}.
+counts(Moves) ->
+  F = fun(rock, {R, P, S}) -> {R + 1, P, S};
+         (paper, {R, P, S}) -> {R, P + 1, S};
+         (scissors, {R, P, S}) -> {R, P, S + 1} end,
+  Counts = lists:foldr(F, {0, 0, 0}, Moves),
+  io:format("~w~n", [Counts]),
+  Counts.
+
+% given the count tuple, get a list of most frequent moves
+-spec frequent({integer(), integer(), integer()}) -> [move()].
+frequent({X, X, X}) -> [rock, paper, scissors];
+frequent({X, X, Y}) when X > Y -> [rock, paper];
+frequent({X, Y, X}) when X > Y -> [rock, scissors];
+frequent({Y, X, X}) when X > Y -> [paper, scissors];
+frequent({X, Y, Z}) when X > Y, X > Z -> [rock];
+frequent({X, Y, Z}) when Y > X, Y > Z -> [paper];
+frequent({X, Y, Z}) when Z > X, Z > Y -> [scissors].
+
+% given the count tuple, get a list of least frequent moves
+-spec infrequent({integer(), integer(), integer()}) -> [move()].
+infrequent({X, X, X}) -> [rock, paper, scissors];
+infrequent({X, X, Y}) when X < Y -> [rock, paper];
+infrequent({X, Y, X}) when X < Y -> [rock, scissors];
+infrequent({Y, X, X}) when X < Y -> [paper, scissors];
+infrequent({X, Y, Z}) when X < Y, X < Z -> [rock];
+infrequent({X, Y, Z}) when Y < X, Y < Z -> [paper];
+infrequent({X, Y, Z}) when Z < X, Z < Y -> [scissors].
 
 %
 % strategies.
@@ -110,3 +144,9 @@ cycle(Xs) -> lists:nth(1 + length(Xs) rem 3, [rock, paper, scissors]).
 
 -spec rand(moves()) -> move().
 rand(_) -> pick().
+
+-spec least_frequent(moves()) -> move().
+least_frequent(Moves) -> beats(pick(infrequent(counts(Moves)))).
+
+-spec most_frequent(moves()) -> move().
+most_frequent(Moves) -> beats(pick(frequent(counts(Moves)))).
